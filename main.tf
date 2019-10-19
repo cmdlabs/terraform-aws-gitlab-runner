@@ -47,6 +47,7 @@ data "template_file" "user_data" {
     gitlab_runner_name               = var.gitlab_runner_registration_config["name"]
     gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
     gitlab_runner_docker_image       = var.gitlab_runner_registration_config["docker_image"]
+    gitlab_runner_concurrency        = var.gitlab_runner_concurrency
     runners_ssm_token_key            = local.runners_ssm_token_key
   }
 }

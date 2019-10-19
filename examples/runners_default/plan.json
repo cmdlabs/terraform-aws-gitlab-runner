@@ -223,7 +223,7 @@
                   }
                 ],
                 "spot_price": null,
-                "user_data": "b869567adcdbefdfc3dbe9e5889ba89c03dc019c",
+                "user_data": "eb3d8944c8e17395495e65d6ef8e0c399a2a56be",
                 "user_data_base64": null,
                 "vpc_classic_link_id": null,
                 "vpc_classic_link_security_groups": null
@@ -640,7 +640,7 @@
             }
           ],
           "spot_price": null,
-          "user_data": "b869567adcdbefdfc3dbe9e5889ba89c03dc019c",
+          "user_data": "eb3d8944c8e17395495e65d6ef8e0c399a2a56be",
           "user_data_base64": null,
           "vpc_classic_link_id": null,
           "vpc_classic_link_security_groups": null
@@ -940,11 +940,12 @@
                 "schema_version": 0,
                 "values": {
                   "filename": null,
-                  "id": "6116bd316a0994794f1ae976b29a484ef91d6552f1a83ec749b8b31c1d995400",
-                  "rendered": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  :\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  gitlab-runner register --non-interactive --executor 'docker' \\\n    --url \"https://gitlab.com\" --name \"test-runner\" \\\n    --registration-token \"GBpeL612xfp3DtEjzZsx\" \\\n    --docker-image \"alpine:latest\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
-                  "template": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  :\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  gitlab-runner register --non-interactive --executor 'docker' \\\n    --url \"${gitlab_runner_url}\" --name \"${gitlab_runner_name}\" \\\n    --registration-token \"${gitlab_runner_registration_token}\" \\\n    --docker-image \"${gitlab_runner_docker_image}\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                  "id": "747cd9c05f54623343cec188ad439cbdc9b3a7674172b852cb884ed92f995105",
+                  "rendered": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  sed -i '\n    s/^concurrent =/concurrent = '\"10\"'/\n  ' /etc/gitlab-runner/config.toml\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  gitlab-runner register --non-interactive --executor 'docker' \\\n    --url \"https://gitlab.com\" --name \"test-runner\" \\\n    --registration-token \"GBpeL612xfp3DtEjzZsx\" \\\n    --docker-image \"alpine:latest\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                  "template": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  sed -i '\n    s/^concurrent =/concurrent = '\"${gitlab_runner_concurrency}\"'/\n  ' /etc/gitlab-runner/config.toml\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  gitlab-runner register --non-interactive --executor 'docker' \\\n    --url \"${gitlab_runner_url}\" --name \"${gitlab_runner_name}\" \\\n    --registration-token \"${gitlab_runner_registration_token}\" \\\n    --docker-image \"${gitlab_runner_docker_image}\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
                   "vars": {
                     "aws_region": "ap-southeast-2",
+                    "gitlab_runner_concurrency": "10",
                     "gitlab_runner_docker_image": "alpine:latest",
                     "gitlab_runner_name": "test-runner",
                     "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
@@ -973,6 +974,9 @@
               "references": [
                 "var.enable_ssh_access"
               ]
+            },
+            "gitlab_runner_concurrency": {
+              "constant_value": 10
             },
             "gitlab_runner_registration_config": {
               "references": [
@@ -1497,6 +1501,7 @@
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_concurrency",
                       "local.runners_ssm_token_key"
                     ]
                   }
@@ -1512,6 +1517,10 @@
                 "default": false,
                 "description": "Enables SSH access to the GitLab Runner instance"
               },
+              "gitlab_runner_concurrency": {
+                "default": 5,
+                "description": "Concurrent value for the runners"
+              },
               "gitlab_runner_registration_config": {
                 "default": {
                   "docker_image": "",
@@ -1520,10 +1529,6 @@
                   "url": ""
                 },
                 "description": "Configuration used to register the runner"
-              },
-              "globals_concurrent": {
-                "default": 10,
-                "description": "Concurrent value for the runners"
               },
               "key_name": {
                 "default": "default",

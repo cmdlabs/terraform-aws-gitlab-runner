@@ -15,7 +15,9 @@ install_deps() {
 }
 
 edit_config_toml() {
-  :
+  sed -i '
+    s/^concurrent =/concurrent = '"${gitlab_runner_concurrency}"'/
+  ' /etc/gitlab-runner/config.toml
 }
 
 install_gitlab_runner() {

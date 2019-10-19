@@ -43,8 +43,8 @@ variable "gitlab_runner_registration_config" {
   }
 }
 
-variable "globals_concurrent" {
+variable "gitlab_runner_concurrency" {
   description = "Concurrent value for the runners"
   type        = number
-  default     = 10
+  default     = 5
 }

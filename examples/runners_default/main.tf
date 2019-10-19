@@ -19,6 +19,8 @@ module "runner" {
   vpc_id       = var.vpc_id
   subnet_ids   = var.subnet_ids
 
+  gitlab_runner_concurrency = 10
+
   gitlab_runner_registration_config = {
     url                = "https://gitlab.com"
     name               = "test-runner"
