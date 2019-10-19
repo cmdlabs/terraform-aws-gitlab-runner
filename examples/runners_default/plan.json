@@ -1,0 +1,1561 @@
+{
+  "format_version": "0.1",
+  "terraform_version": "0.12.9",
+  "variables": {
+    "enable_ssh_access": {
+      "value": "true"
+    },
+    "registration_token": {
+      "value": "GBpeL612xfp3DtEjzZsx"
+    },
+    "subnet_ids": {
+      "value": [
+        "subnet-00f1b18508dcc87f8",
+        "subnet-01e37c6ab538e9ab1",
+        "subnet-02b4067bb91f61a59"
+      ]
+    },
+    "vpc_id": {
+      "value": "vpc-07a59518ae4faa320"
+    }
+  },
+  "planned_values": {
+    "root_module": {
+      "child_modules": [
+        {
+          "resources": [
+            {
+              "address": "module.runner.aws_autoscaling_group.gitlab_runner_instance",
+              "mode": "managed",
+              "type": "aws_autoscaling_group",
+              "name": "gitlab_runner_instance",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "desired_capacity": 1,
+                "enabled_metrics": null,
+                "force_delete": false,
+                "health_check_grace_period": 0,
+                "initial_lifecycle_hook": [],
+                "launch_template": [],
+                "max_size": 1,
+                "metrics_granularity": "1Minute",
+                "min_elb_capacity": null,
+                "min_size": 1,
+                "mixed_instances_policy": [],
+                "name": "gitlab-runner-autoscaling-group",
+                "name_prefix": null,
+                "placement_group": null,
+                "protect_from_scale_in": false,
+                "suspended_processes": null,
+                "tag": [],
+                "tags": null,
+                "termination_policies": null,
+                "timeouts": null,
+                "vpc_zone_identifier": [
+                  "subnet-00f1b18508dcc87f8",
+                  "subnet-01e37c6ab538e9ab1",
+                  "subnet-02b4067bb91f61a59"
+                ],
+                "wait_for_capacity_timeout": "10m",
+                "wait_for_elb_capacity": null
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_instance_profile.instance",
+              "mode": "managed",
+              "type": "aws_iam_instance_profile",
+              "name": "instance",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "name": "gitlab-runner-instance-profile",
+                "name_prefix": null,
+                "path": "/",
+                "role": "gitlab-runner-instance-role"
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_policy.instance_session_manager_policy",
+              "mode": "managed",
+              "type": "aws_iam_policy",
+              "name": "instance_session_manager_policy",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "description": "Policy for session manager",
+                "name": "gitlab-runner-session-manager",
+                "name_prefix": null,
+                "path": "/",
+                "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssmmessages:CreateControlChannel\",\n        \"ssmmessages:CreateDataChannel\",\n        \"ssmmessages:OpenControlChannel\",\n        \"ssmmessages:OpenDataChannel\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_policy.service_linked_role",
+              "mode": "managed",
+              "type": "aws_iam_policy",
+              "name": "service_linked_role",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "description": "Policy for creation of service linked roles",
+                "name": "gitlab-runner-service_linked_role",
+                "name_prefix": null,
+                "path": "/",
+                "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"iam:CreateServiceLinkedRole\",\n      \"Resource\": \"arn:aws:iam::*:role/aws-service-role/*\"\n    }\n  ]\n}"
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_policy.ssm",
+              "mode": "managed",
+              "type": "aws_iam_policy",
+              "name": "ssm",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "description": "Policy for runner token param access via SSM",
+                "name": "gitlab-runner-ssm",
+                "name_prefix": null,
+                "path": "/",
+                "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:PutParameter\"\n      ],\n      \"Resource\": \"*\"\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:GetParameters\"\n      ],\n      \"Resource\": \"arn:aws:ssm:*\"\n    }\n  ]\n}\n"
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_role.instance",
+              "mode": "managed",
+              "type": "aws_iam_role",
+              "name": "instance",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "assume_role_policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n",
+                "description": null,
+                "force_detach_policies": false,
+                "max_session_duration": 3600,
+                "name": "gitlab-runner-instance-role",
+                "name_prefix": null,
+                "path": "/",
+                "permissions_boundary": null,
+                "tags": null
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_role_policy.instance",
+              "mode": "managed",
+              "type": "aws_iam_role_policy",
+              "name": "instance",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "name": "gitlab-runner-instance-role",
+                "name_prefix": null,
+                "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowLoggingToCloudWatch\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\",\n        \"logs:DescribeLogStreams\"\n      ],\n      \"Resource\": [\n        \"arn:aws:logs:*:*:*\"\n      ]\n    }\n  ]\n}\n",
+                "role": "gitlab-runner-instance-role"
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_aws_managed",
+              "mode": "managed",
+              "type": "aws_iam_role_policy_attachment",
+              "name": "instance_session_manager_aws_managed",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "policy_arn": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+                "role": "gitlab-runner-instance-role"
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_policy",
+              "mode": "managed",
+              "type": "aws_iam_role_policy_attachment",
+              "name": "instance_session_manager_policy",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "role": "gitlab-runner-instance-role"
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_role_policy_attachment.service_linked_role",
+              "mode": "managed",
+              "type": "aws_iam_role_policy_attachment",
+              "name": "service_linked_role",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "role": "gitlab-runner-instance-role"
+              }
+            },
+            {
+              "address": "module.runner.aws_iam_role_policy_attachment.ssm",
+              "mode": "managed",
+              "type": "aws_iam_role_policy_attachment",
+              "name": "ssm",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "role": "gitlab-runner-instance-role"
+              }
+            },
+            {
+              "address": "module.runner.aws_launch_configuration.gitlab_runner_instance",
+              "mode": "managed",
+              "type": "aws_launch_configuration",
+              "name": "gitlab_runner_instance",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "associate_public_ip_address": true,
+                "enable_monitoring": true,
+                "ephemeral_block_device": [],
+                "iam_instance_profile": "gitlab-runner-instance-profile",
+                "image_id": "ami-0804dc420cb24c62b",
+                "instance_type": "t3.micro",
+                "key_name": "default",
+                "name_prefix": null,
+                "placement_tenancy": null,
+                "root_block_device": [
+                  {
+                    "delete_on_termination": true,
+                    "volume_size": 8,
+                    "volume_type": "gp2"
+                  }
+                ],
+                "spot_price": null,
+                "user_data": "ced0b9b9c47902c5e5517e9d53cc40816a8f44a1",
+                "user_data_base64": null,
+                "vpc_classic_link_id": null,
+                "vpc_classic_link_security_groups": null
+              }
+            },
+            {
+              "address": "module.runner.aws_security_group.runner",
+              "mode": "managed",
+              "type": "aws_security_group",
+              "name": "runner",
+              "provider_name": "aws",
+              "schema_version": 1,
+              "values": {
+                "description": "Managed by Terraform",
+                "egress": [
+                  {
+                    "cidr_blocks": [
+                      "0.0.0.0/0"
+                    ],
+                    "description": "",
+                    "from_port": 0,
+                    "ipv6_cidr_blocks": [],
+                    "prefix_list_ids": [],
+                    "protocol": "-1",
+                    "security_groups": [],
+                    "self": false,
+                    "to_port": 0
+                  }
+                ],
+                "name_prefix": "gitlab-runner-security-group",
+                "revoke_rules_on_delete": false,
+                "tags": null,
+                "timeouts": null,
+                "vpc_id": "vpc-07a59518ae4faa320"
+              }
+            },
+            {
+              "address": "module.runner.aws_security_group_rule.runner_ssh[0]",
+              "mode": "managed",
+              "type": "aws_security_group_rule",
+              "name": "runner_ssh",
+              "index": 0,
+              "provider_name": "aws",
+              "schema_version": 2,
+              "values": {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": null,
+                "from_port": 22,
+                "ipv6_cidr_blocks": null,
+                "prefix_list_ids": null,
+                "protocol": "tcp",
+                "self": false,
+                "to_port": 22,
+                "type": "ingress"
+              }
+            },
+            {
+              "address": "module.runner.aws_ssm_parameter.runner_registration_token",
+              "mode": "managed",
+              "type": "aws_ssm_parameter",
+              "name": "runner_registration_token",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "allowed_pattern": null,
+                "description": null,
+                "name": "gitlab-runner-runner-token",
+                "overwrite": null,
+                "tags": null,
+                "tier": "Standard",
+                "type": "SecureString",
+                "value": "null"
+              }
+            }
+          ],
+          "address": "module.runner"
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "module.runner.aws_autoscaling_group.gitlab_runner_instance",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_autoscaling_group",
+      "name": "gitlab_runner_instance",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "desired_capacity": 1,
+          "enabled_metrics": null,
+          "force_delete": false,
+          "health_check_grace_period": 0,
+          "initial_lifecycle_hook": [],
+          "launch_template": [],
+          "max_size": 1,
+          "metrics_granularity": "1Minute",
+          "min_elb_capacity": null,
+          "min_size": 1,
+          "mixed_instances_policy": [],
+          "name": "gitlab-runner-autoscaling-group",
+          "name_prefix": null,
+          "placement_group": null,
+          "protect_from_scale_in": false,
+          "suspended_processes": null,
+          "tag": [],
+          "tags": null,
+          "termination_policies": null,
+          "timeouts": null,
+          "vpc_zone_identifier": [
+            "subnet-00f1b18508dcc87f8",
+            "subnet-01e37c6ab538e9ab1",
+            "subnet-02b4067bb91f61a59"
+          ],
+          "wait_for_capacity_timeout": "10m",
+          "wait_for_elb_capacity": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "availability_zones": true,
+          "default_cooldown": true,
+          "health_check_type": true,
+          "id": true,
+          "initial_lifecycle_hook": [],
+          "launch_configuration": true,
+          "launch_template": [],
+          "load_balancers": true,
+          "mixed_instances_policy": [],
+          "service_linked_role_arn": true,
+          "tag": [],
+          "target_group_arns": true,
+          "vpc_zone_identifier": [
+            false,
+            false,
+            false
+          ]
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_instance_profile.instance",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_instance_profile",
+      "name": "instance",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "name": "gitlab-runner-instance-profile",
+          "name_prefix": null,
+          "path": "/",
+          "role": "gitlab-runner-instance-role"
+        },
+        "after_unknown": {
+          "arn": true,
+          "create_date": true,
+          "id": true,
+          "roles": true,
+          "unique_id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_policy.instance_session_manager_policy",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "instance_session_manager_policy",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": "Policy for session manager",
+          "name": "gitlab-runner-session-manager",
+          "name_prefix": null,
+          "path": "/",
+          "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssmmessages:CreateControlChannel\",\n        \"ssmmessages:CreateDataChannel\",\n        \"ssmmessages:OpenControlChannel\",\n        \"ssmmessages:OpenDataChannel\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
+        },
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_policy.service_linked_role",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "service_linked_role",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": "Policy for creation of service linked roles",
+          "name": "gitlab-runner-service_linked_role",
+          "name_prefix": null,
+          "path": "/",
+          "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"iam:CreateServiceLinkedRole\",\n      \"Resource\": \"arn:aws:iam::*:role/aws-service-role/*\"\n    }\n  ]\n}"
+        },
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_policy.ssm",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "ssm",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": "Policy for runner token param access via SSM",
+          "name": "gitlab-runner-ssm",
+          "name_prefix": null,
+          "path": "/",
+          "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:PutParameter\"\n      ],\n      \"Resource\": \"*\"\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:GetParameters\"\n      ],\n      \"Resource\": \"arn:aws:ssm:*\"\n    }\n  ]\n}\n"
+        },
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_role.instance",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "instance",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "assume_role_policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n",
+          "description": null,
+          "force_detach_policies": false,
+          "max_session_duration": 3600,
+          "name": "gitlab-runner-instance-role",
+          "name_prefix": null,
+          "path": "/",
+          "permissions_boundary": null,
+          "tags": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "create_date": true,
+          "id": true,
+          "unique_id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_role_policy.instance",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_role_policy",
+      "name": "instance",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "name": "gitlab-runner-instance-role",
+          "name_prefix": null,
+          "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowLoggingToCloudWatch\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\",\n        \"logs:DescribeLogStreams\"\n      ],\n      \"Resource\": [\n        \"arn:aws:logs:*:*:*\"\n      ]\n    }\n  ]\n}\n",
+          "role": "gitlab-runner-instance-role"
+        },
+        "after_unknown": {
+          "id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_aws_managed",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_role_policy_attachment",
+      "name": "instance_session_manager_aws_managed",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "policy_arn": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+          "role": "gitlab-runner-instance-role"
+        },
+        "after_unknown": {
+          "id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_policy",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_role_policy_attachment",
+      "name": "instance_session_manager_policy",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "role": "gitlab-runner-instance-role"
+        },
+        "after_unknown": {
+          "id": true,
+          "policy_arn": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_role_policy_attachment.service_linked_role",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_role_policy_attachment",
+      "name": "service_linked_role",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "role": "gitlab-runner-instance-role"
+        },
+        "after_unknown": {
+          "id": true,
+          "policy_arn": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_iam_role_policy_attachment.ssm",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_iam_role_policy_attachment",
+      "name": "ssm",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "role": "gitlab-runner-instance-role"
+        },
+        "after_unknown": {
+          "id": true,
+          "policy_arn": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_launch_configuration.gitlab_runner_instance",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_launch_configuration",
+      "name": "gitlab_runner_instance",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "associate_public_ip_address": true,
+          "enable_monitoring": true,
+          "ephemeral_block_device": [],
+          "iam_instance_profile": "gitlab-runner-instance-profile",
+          "image_id": "ami-0804dc420cb24c62b",
+          "instance_type": "t3.micro",
+          "key_name": "default",
+          "name_prefix": null,
+          "placement_tenancy": null,
+          "root_block_device": [
+            {
+              "delete_on_termination": true,
+              "volume_size": 8,
+              "volume_type": "gp2"
+            }
+          ],
+          "spot_price": null,
+          "user_data": "ced0b9b9c47902c5e5517e9d53cc40816a8f44a1",
+          "user_data_base64": null,
+          "vpc_classic_link_id": null,
+          "vpc_classic_link_security_groups": null
+        },
+        "after_unknown": {
+          "ebs_block_device": true,
+          "ebs_optimized": true,
+          "ephemeral_block_device": [],
+          "id": true,
+          "name": true,
+          "root_block_device": [
+            {
+              "encrypted": true,
+              "iops": true
+            }
+          ],
+          "security_groups": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_security_group.runner",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "runner",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": "Managed by Terraform",
+          "egress": [
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "",
+              "from_port": 0,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "-1",
+              "security_groups": [],
+              "self": false,
+              "to_port": 0
+            }
+          ],
+          "name_prefix": "gitlab-runner-security-group",
+          "revoke_rules_on_delete": false,
+          "tags": null,
+          "timeouts": null,
+          "vpc_id": "vpc-07a59518ae4faa320"
+        },
+        "after_unknown": {
+          "arn": true,
+          "egress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "id": true,
+          "ingress": true,
+          "name": true,
+          "owner_id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_security_group_rule.runner_ssh[0]",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "runner_ssh",
+      "index": 0,
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": null,
+          "from_port": 22,
+          "ipv6_cidr_blocks": null,
+          "prefix_list_ids": null,
+          "protocol": "tcp",
+          "self": false,
+          "to_port": 22,
+          "type": "ingress"
+        },
+        "after_unknown": {
+          "cidr_blocks": [
+            false
+          ],
+          "id": true,
+          "security_group_id": true,
+          "source_security_group_id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_ssm_parameter.runner_registration_token",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_ssm_parameter",
+      "name": "runner_registration_token",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "allowed_pattern": null,
+          "description": null,
+          "name": "gitlab-runner-runner-token",
+          "overwrite": null,
+          "tags": null,
+          "tier": "Standard",
+          "type": "SecureString",
+          "value": "null"
+        },
+        "after_unknown": {
+          "arn": true,
+          "id": true,
+          "key_id": true,
+          "version": true
+        }
+      }
+    }
+  ],
+  "prior_state": {
+    "format_version": "0.1",
+    "terraform_version": "0.12.9",
+    "values": {
+      "root_module": {
+        "child_modules": [
+          {
+            "resources": [
+              {
+                "address": "data.aws_ami.runner",
+                "mode": "data",
+                "type": "aws_ami",
+                "name": "runner",
+                "provider_name": "aws",
+                "schema_version": 0,
+                "values": {
+                  "architecture": "x86_64",
+                  "block_device_mappings": [
+                    {
+                      "device_name": "/dev/xvda",
+                      "ebs": {
+                        "delete_on_termination": "true",
+                        "encrypted": "false",
+                        "iops": "0",
+                        "snapshot_id": "snap-0037fda5f14f34025",
+                        "volume_size": "8",
+                        "volume_type": "standard"
+                      },
+                      "no_device": "",
+                      "virtual_name": ""
+                    }
+                  ],
+                  "creation_date": "2019-08-30T07:02:25.000Z",
+                  "description": "Amazon Linux 2 AMI 2.0.20190823.1 x86_64 HVM ebs",
+                  "executable_users": null,
+                  "filter": [
+                    {
+                      "name": "name",
+                      "values": [
+                        "amzn2-ami-hvm-*-x86_64-ebs"
+                      ]
+                    }
+                  ],
+                  "hypervisor": "xen",
+                  "id": "ami-0804dc420cb24c62b",
+                  "image_id": "ami-0804dc420cb24c62b",
+                  "image_location": "amazon/amzn2-ami-hvm-2.0.20190823.1-x86_64-ebs",
+                  "image_owner_alias": "amazon",
+                  "image_type": "machine",
+                  "kernel_id": null,
+                  "most_recent": true,
+                  "name": "amzn2-ami-hvm-2.0.20190823.1-x86_64-ebs",
+                  "name_regex": null,
+                  "owner_id": "137112412989",
+                  "owners": [
+                    "amazon"
+                  ],
+                  "platform": null,
+                  "product_codes": [],
+                  "public": true,
+                  "ramdisk_id": null,
+                  "root_device_name": "/dev/xvda",
+                  "root_device_type": "ebs",
+                  "root_snapshot_id": "snap-0037fda5f14f34025",
+                  "sriov_net_support": "simple",
+                  "state": "available",
+                  "state_reason": {
+                    "code": "UNSET",
+                    "message": "UNSET"
+                  },
+                  "tags": {},
+                  "virtualization_type": "hvm"
+                }
+              },
+              {
+                "address": "data.template_file.instance_profile",
+                "mode": "data",
+                "type": "template_file",
+                "name": "instance_profile",
+                "provider_name": "template",
+                "schema_version": 0,
+                "values": {
+                  "filename": null,
+                  "id": "dfc92f1d1a2d77d35956f5027600590d5209342b3ac3d39f8959e5a372db8afc",
+                  "rendered": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowLoggingToCloudWatch\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\",\n        \"logs:DescribeLogStreams\"\n      ],\n      \"Resource\": [\n        \"arn:aws:logs:*:*:*\"\n      ]\n    }\n  ]\n}\n",
+                  "template": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowLoggingToCloudWatch\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\",\n        \"logs:DescribeLogStreams\"\n      ],\n      \"Resource\": [\n        \"arn:aws:logs:*:*:*\"\n      ]\n    }\n  ]\n}\n",
+                  "vars": null
+                }
+              },
+              {
+                "address": "data.template_file.instance_role_trust_policy",
+                "mode": "data",
+                "type": "template_file",
+                "name": "instance_role_trust_policy",
+                "provider_name": "template",
+                "schema_version": 0,
+                "values": {
+                  "filename": null,
+                  "id": "076813d744fd385b5d2f7835cf05a679ebb0aabfbbbf5a6276fe332b21574ef9",
+                  "rendered": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n",
+                  "template": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n",
+                  "vars": null
+                }
+              },
+              {
+                "address": "data.template_file.instance_session_manager_policy",
+                "mode": "data",
+                "type": "template_file",
+                "name": "instance_session_manager_policy",
+                "provider_name": "template",
+                "schema_version": 0,
+                "values": {
+                  "filename": null,
+                  "id": "48379dcc6a6b69bc567e2b743136b7926ad2d93ec4d2068f9dcdb2297ea5270c",
+                  "rendered": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssmmessages:CreateControlChannel\",\n        \"ssmmessages:CreateDataChannel\",\n        \"ssmmessages:OpenControlChannel\",\n        \"ssmmessages:OpenDataChannel\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n",
+                  "template": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssmmessages:CreateControlChannel\",\n        \"ssmmessages:CreateDataChannel\",\n        \"ssmmessages:OpenControlChannel\",\n        \"ssmmessages:OpenDataChannel\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n",
+                  "vars": null
+                }
+              },
+              {
+                "address": "data.template_file.service_linked_role",
+                "mode": "data",
+                "type": "template_file",
+                "name": "service_linked_role",
+                "provider_name": "template",
+                "schema_version": 0,
+                "values": {
+                  "filename": null,
+                  "id": "1810d3d0047d4a566eaf344d20df8e28f83e9d9591cf18a8f1f70545d531f7e1",
+                  "rendered": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"iam:CreateServiceLinkedRole\",\n      \"Resource\": \"arn:aws:iam::*:role/aws-service-role/*\"\n    }\n  ]\n}",
+                  "template": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"iam:CreateServiceLinkedRole\",\n      \"Resource\": \"arn:aws:iam::*:role/aws-service-role/*\"\n    }\n  ]\n}",
+                  "vars": null
+                }
+              },
+              {
+                "address": "data.template_file.ssm_policy",
+                "mode": "data",
+                "type": "template_file",
+                "name": "ssm_policy",
+                "provider_name": "template",
+                "schema_version": 0,
+                "values": {
+                  "filename": null,
+                  "id": "54c470bf86b960b6cb9d2bfa87c806c1b46d153f52b8d59bcff4ead351ab2534",
+                  "rendered": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:PutParameter\"\n      ],\n      \"Resource\": \"*\"\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:GetParameters\"\n      ],\n      \"Resource\": \"arn:aws:ssm:*\"\n    }\n  ]\n}\n",
+                  "template": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:PutParameter\"\n      ],\n      \"Resource\": \"*\"\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:GetParameters\"\n      ],\n      \"Resource\": \"arn:aws:ssm:*\"\n    }\n  ]\n}\n",
+                  "vars": null
+                }
+              },
+              {
+                "address": "data.template_file.user_data",
+                "mode": "data",
+                "type": "template_file",
+                "name": "user_data",
+                "provider_name": "template",
+                "schema_version": 0,
+                "values": {
+                  "filename": null,
+                  "id": "3b6f91bc1b59e0c7f9e198da808cb46e98e28ed11543f954b2ca8e4fed540b54",
+                  "rendered": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  :\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  registration_token=\"GBpeL612xfp3DtEjzZsx\"\n  # TODO.\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                  "template": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  :\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  registration_token=\"${gitlab_runner_registration_token}\"\n  # TODO.\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                  "vars": {
+                    "aws_region": "ap-southeast-2",
+                    "gitlab_runner_access_level": "not_protected",
+                    "gitlab_runner_description": "runner default - auto",
+                    "gitlab_runner_locked_to_project": "true",
+                    "gitlab_runner_maximum_timeout": "3600",
+                    "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
+                    "runners_ssm_token_key": "gitlab-runner-runner-token"
+                  }
+                }
+              }
+            ],
+            "address": "module.runner"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "root_module": {
+      "module_calls": {
+        "runner": {
+          "source": "../../",
+          "expressions": {
+            "aws_region": {
+              "constant_value": "ap-southeast-2"
+            },
+            "enable_ssh_access": {
+              "references": [
+                "var.enable_ssh_access"
+              ]
+            },
+            "gitlab_runner_registration_config": {
+              "references": [
+                "var.registration_token"
+              ]
+            },
+            "key_name": {
+              "constant_value": "default"
+            },
+            "subnet_ids": {
+              "references": [
+                "var.subnet_ids"
+              ]
+            },
+            "vpc_id": {
+              "references": [
+                "var.vpc_id"
+              ]
+            }
+          },
+          "module": {
+            "resources": [
+              {
+                "address": "aws_autoscaling_group.gitlab_runner_instance",
+                "mode": "managed",
+                "type": "aws_autoscaling_group",
+                "name": "gitlab_runner_instance",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "desired_capacity": {
+                    "constant_value": 1
+                  },
+                  "health_check_grace_period": {
+                    "constant_value": 0
+                  },
+                  "launch_configuration": {
+                    "references": [
+                      "aws_launch_configuration.gitlab_runner_instance"
+                    ]
+                  },
+                  "max_size": {
+                    "constant_value": 1
+                  },
+                  "min_size": {
+                    "constant_value": 1
+                  },
+                  "name": {
+                    "constant_value": "gitlab-runner-autoscaling-group"
+                  },
+                  "vpc_zone_identifier": {
+                    "references": [
+                      "var.subnet_ids"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_instance_profile.instance",
+                "mode": "managed",
+                "type": "aws_iam_instance_profile",
+                "name": "instance",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "name": {
+                    "constant_value": "gitlab-runner-instance-profile"
+                  },
+                  "role": {
+                    "references": [
+                      "aws_iam_role.instance"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_policy.instance_session_manager_policy",
+                "mode": "managed",
+                "type": "aws_iam_policy",
+                "name": "instance_session_manager_policy",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "description": {
+                    "constant_value": "Policy for session manager"
+                  },
+                  "name": {
+                    "constant_value": "gitlab-runner-session-manager"
+                  },
+                  "path": {
+                    "constant_value": "/"
+                  },
+                  "policy": {
+                    "references": [
+                      "data.template_file.instance_session_manager_policy"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_policy.service_linked_role",
+                "mode": "managed",
+                "type": "aws_iam_policy",
+                "name": "service_linked_role",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "description": {
+                    "constant_value": "Policy for creation of service linked roles"
+                  },
+                  "name": {
+                    "constant_value": "gitlab-runner-service_linked_role"
+                  },
+                  "path": {
+                    "constant_value": "/"
+                  },
+                  "policy": {
+                    "references": [
+                      "data.template_file.service_linked_role"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_policy.ssm",
+                "mode": "managed",
+                "type": "aws_iam_policy",
+                "name": "ssm",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "description": {
+                    "constant_value": "Policy for runner token param access via SSM"
+                  },
+                  "name": {
+                    "constant_value": "gitlab-runner-ssm"
+                  },
+                  "path": {
+                    "constant_value": "/"
+                  },
+                  "policy": {
+                    "references": [
+                      "data.template_file.ssm_policy"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_role.instance",
+                "mode": "managed",
+                "type": "aws_iam_role",
+                "name": "instance",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "assume_role_policy": {
+                    "references": [
+                      "data.template_file.instance_role_trust_policy"
+                    ]
+                  },
+                  "name": {
+                    "constant_value": "gitlab-runner-instance-role"
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_role_policy.instance",
+                "mode": "managed",
+                "type": "aws_iam_role_policy",
+                "name": "instance",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "name": {
+                    "constant_value": "gitlab-runner-instance-role"
+                  },
+                  "policy": {
+                    "references": [
+                      "data.template_file.instance_profile"
+                    ]
+                  },
+                  "role": {
+                    "references": [
+                      "aws_iam_role.instance"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_role_policy_attachment.instance_session_manager_aws_managed",
+                "mode": "managed",
+                "type": "aws_iam_role_policy_attachment",
+                "name": "instance_session_manager_aws_managed",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "policy_arn": {
+                    "constant_value": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+                  },
+                  "role": {
+                    "references": [
+                      "aws_iam_role.instance"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_role_policy_attachment.instance_session_manager_policy",
+                "mode": "managed",
+                "type": "aws_iam_role_policy_attachment",
+                "name": "instance_session_manager_policy",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "policy_arn": {
+                    "references": [
+                      "aws_iam_policy.instance_session_manager_policy"
+                    ]
+                  },
+                  "role": {
+                    "references": [
+                      "aws_iam_role.instance"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_role_policy_attachment.service_linked_role",
+                "mode": "managed",
+                "type": "aws_iam_role_policy_attachment",
+                "name": "service_linked_role",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "policy_arn": {
+                    "references": [
+                      "aws_iam_policy.service_linked_role"
+                    ]
+                  },
+                  "role": {
+                    "references": [
+                      "aws_iam_role.instance"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_iam_role_policy_attachment.ssm",
+                "mode": "managed",
+                "type": "aws_iam_role_policy_attachment",
+                "name": "ssm",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "policy_arn": {
+                    "references": [
+                      "aws_iam_policy.ssm"
+                    ]
+                  },
+                  "role": {
+                    "references": [
+                      "aws_iam_role.instance"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_launch_configuration.gitlab_runner_instance",
+                "mode": "managed",
+                "type": "aws_launch_configuration",
+                "name": "gitlab_runner_instance",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "associate_public_ip_address": {
+                    "references": [
+                      "var.enable_ssh_access"
+                    ]
+                  },
+                  "iam_instance_profile": {
+                    "references": [
+                      "aws_iam_instance_profile.instance"
+                    ]
+                  },
+                  "image_id": {
+                    "references": [
+                      "data.aws_ami.runner"
+                    ]
+                  },
+                  "instance_type": {
+                    "references": [
+                      "local.gitlab_runner_instance_type"
+                    ]
+                  },
+                  "key_name": {
+                    "references": [
+                      "var.key_name"
+                    ]
+                  },
+                  "root_block_device": [
+                    {
+                      "delete_on_termination": {
+                        "constant_value": true
+                      },
+                      "volume_size": {
+                        "constant_value": 8
+                      },
+                      "volume_type": {
+                        "constant_value": "gp2"
+                      }
+                    }
+                  ],
+                  "security_groups": {
+                    "references": [
+                      "aws_security_group.runner"
+                    ]
+                  },
+                  "user_data": {
+                    "references": [
+                      "data.template_file.user_data"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_security_group.runner",
+                "mode": "managed",
+                "type": "aws_security_group",
+                "name": "runner",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "name_prefix": {
+                    "constant_value": "gitlab-runner-security-group"
+                  },
+                  "vpc_id": {
+                    "references": [
+                      "var.vpc_id"
+                    ]
+                  }
+                },
+                "schema_version": 1
+              },
+              {
+                "address": "aws_security_group_rule.runner_ssh",
+                "mode": "managed",
+                "type": "aws_security_group_rule",
+                "name": "runner_ssh",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "cidr_blocks": {
+                    "references": [
+                      "var.ssh_cidr_blocks"
+                    ]
+                  },
+                  "from_port": {
+                    "constant_value": 22
+                  },
+                  "protocol": {
+                    "constant_value": "tcp"
+                  },
+                  "security_group_id": {
+                    "references": [
+                      "aws_security_group.runner"
+                    ]
+                  },
+                  "to_port": {
+                    "constant_value": 22
+                  },
+                  "type": {
+                    "constant_value": "ingress"
+                  }
+                },
+                "schema_version": 2,
+                "count_expression": {
+                  "references": [
+                    "var.enable_ssh_access"
+                  ]
+                }
+              },
+              {
+                "address": "aws_ssm_parameter.runner_registration_token",
+                "mode": "managed",
+                "type": "aws_ssm_parameter",
+                "name": "runner_registration_token",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "name": {
+                    "references": [
+                      "local.runners_ssm_token_key"
+                    ]
+                  },
+                  "type": {
+                    "constant_value": "SecureString"
+                  },
+                  "value": {
+                    "constant_value": "null"
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.aws_ami.runner",
+                "mode": "data",
+                "type": "aws_ami",
+                "name": "runner",
+                "provider_config_key": "runner:aws",
+                "expressions": {
+                  "filter": [
+                    {
+                      "name": {
+                        "constant_value": "name"
+                      },
+                      "values": {
+                        "references": [
+                          "local.gitlab_runner_ami_filter"
+                        ]
+                      }
+                    }
+                  ],
+                  "most_recent": {
+                    "constant_value": "true"
+                  },
+                  "owners": {
+                    "constant_value": [
+                      "amazon"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.template_file.instance_profile",
+                "mode": "data",
+                "type": "template_file",
+                "name": "instance_profile",
+                "provider_config_key": "runner:template",
+                "expressions": {
+                  "template": {
+                    "references": [
+                      "path.module"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.template_file.instance_role_trust_policy",
+                "mode": "data",
+                "type": "template_file",
+                "name": "instance_role_trust_policy",
+                "provider_config_key": "runner:template",
+                "expressions": {
+                  "template": {
+                    "references": [
+                      "path.module"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.template_file.instance_session_manager_policy",
+                "mode": "data",
+                "type": "template_file",
+                "name": "instance_session_manager_policy",
+                "provider_config_key": "runner:template",
+                "expressions": {
+                  "template": {
+                    "references": [
+                      "path.module"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.template_file.service_linked_role",
+                "mode": "data",
+                "type": "template_file",
+                "name": "service_linked_role",
+                "provider_config_key": "runner:template",
+                "expressions": {
+                  "template": {
+                    "references": [
+                      "path.module"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.template_file.ssm_policy",
+                "mode": "data",
+                "type": "template_file",
+                "name": "ssm_policy",
+                "provider_config_key": "runner:template",
+                "expressions": {
+                  "template": {
+                    "references": [
+                      "path.module"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.template_file.user_data",
+                "mode": "data",
+                "type": "template_file",
+                "name": "user_data",
+                "provider_config_key": "runner:template",
+                "expressions": {
+                  "template": {
+                    "references": [
+                      "path.module"
+                    ]
+                  },
+                  "vars": {
+                    "references": [
+                      "var.aws_region",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "local.runners_ssm_token_key"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              }
+            ],
+            "variables": {
+              "aws_region": {
+                "description": "Name of S3 region for the runner cache and SSM"
+              },
+              "enable_ssh_access": {
+                "default": false,
+                "description": "Enables SSH access to the GitLab Runner instance"
+              },
+              "gitlab_runner_registration_config": {
+                "default": {
+                  "access_level": "",
+                  "description": "",
+                  "locked_to_project": "",
+                  "maximum_timeout": "",
+                  "registration_token": ""
+                },
+                "description": "Configuration used to register the runner"
+              },
+              "globals_concurrent": {
+                "default": 10,
+                "description": "Concurrent value for the runners"
+              },
+              "key_name": {
+                "default": "default",
+                "description": "The name of the EC2 key pair to use"
+              },
+              "ssh_cidr_blocks": {
+                "default": [
+                  "0.0.0.0/0"
+                ],
+                "description": "List of CIDR blocks to allow SSH Access to docker machine and the GitLab Runner"
+              },
+              "subnet_ids": {
+                "description": "List of subnets used for hosting the GitLab runners"
+              },
+              "vpc_id": {
+                "description": "The target VPC for the docker-machine and runner instances"
+              }
+            }
+          }
+        }
+      },
+      "variables": {
+        "enable_ssh_access": {
+          "default": false
+        },
+        "registration_token": {},
+        "subnet_ids": {},
+        "vpc_id": {}
+      }
+    }
+  }
+}

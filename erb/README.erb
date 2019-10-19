@@ -1,0 +1,59 @@
+<!-- vim: set ft=markdown: -->
+![CMD Solutions|medium](https://s3-ap-southeast-2.amazonaws.com/cmd-website-images/CMDlogo.jpg)
+
+# terraform-aws-gitlab-runner
+
+<%= %x{ruby erb/toc.rb erb/README.erb} -%>
+
+## Overview
+
+This module creates a simple GitLab CI Runner on a long-lived EC2 instance in an Auto Scaling Group.
+
+### GitLab runner token configuration
+
+The runner is registered on initial deployment.
+
+To register the runner automatically set the variable `gitlab_runner_registration_config["token"]`. This token value can be found in your GitLab project, group, or global settings. For a generic runner you can find the token in the admin section. Here is an example:
+
+``` hcl
+gitlab_runner_registration_config = {
+  registration_token = "<registration token>"
+  description        = "<some description>"
+  locked_to_project  = "true"
+  maximum_timeout    = "3600"
+  access_level       = "<not_protected OR ref_protected, ref_protected runner will only run on pipelines triggered on protected branches>"
+}
+```
+
+### Inputs
+
+The below outlines the current parameters and defaults.
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-------:|:--------:|
+<%= %x{ruby erb/variables2md.rb variables.tf} -%>
+
+### Outputs
+
+|Name|Description|
+|------------|---------------------|
+<%= %x{ruby erb/outputs2md.rb outputs.tf} -%>
+
+### Examples
+
+To create a Gitlab Runner:
+
+```tf
+<% remote = %x{git remote -v}.split("\n")[0].split[1] -%>
+<%= %x{sed -E 's!source( +)=.*!source\\1= "#{remote}"!' examples/runner_default/main.tf} -%>
+```
+
+To apply that:
+
+```text
+▶ TF_VAR_registration_token=xxxxxxxx terraform apply
+```
+
+## License
+
+Apache 2.0.
