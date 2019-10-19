@@ -1,7 +1,6 @@
 locals {
   gitlab_runner_ami_filter      = ["amzn2-ami-hvm-*-x86_64-ebs"]
   gitlab_runner_instance_type   = "t3.micro"
-  runners_ssm_token_key         = "gitlab-runner-runner-token"
 }
 
 resource "aws_security_group" "runner" {
@@ -28,16 +27,6 @@ resource "aws_security_group_rule" "runner_ssh" {
   security_group_id = aws_security_group.runner.id
 }
 
-resource "aws_ssm_parameter" "runner_registration_token" {
-  name  = local.runners_ssm_token_key
-  type  = "SecureString"
-  value = "null"
-
-  lifecycle {
-    ignore_changes = [value]  # Managed by the user-data script.
-  }
-}
-
 data "template_file" "user_data" {
   template = file("${path.module}/template/user-data.sh.tpl")
 
@@ -48,7 +37,6 @@ data "template_file" "user_data" {
     gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
     gitlab_runner_docker_image       = var.gitlab_runner_registration_config["docker_image"]
     gitlab_runner_concurrency        = var.gitlab_runner_concurrency
-    runners_ssm_token_key            = local.runners_ssm_token_key
   }
 }
 
