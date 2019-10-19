@@ -22,7 +22,7 @@ install_runner() {
 
 edit_config_toml() {
   sed -i '
-    s/^concurrent =/concurrent = '"${gitlab_runner_concurrency}"'/
+    s/^concurrent =.*/concurrent = '"${gitlab_runner_concurrency}"'/
   ' /etc/gitlab-runner/config.toml
 }
 
