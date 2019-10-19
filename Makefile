@@ -4,7 +4,7 @@ docs:
 	ruby erb/docs.rb
 
 check:
-	shellcheck --exclude=SC2154 template/user-data.sh.tpl
+	shellcheck --exclude=SC2154,SC2155 template/user-data.sh.tpl
 
 unit:
 	bash shunit2/validate_json.sh

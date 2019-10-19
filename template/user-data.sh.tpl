@@ -49,6 +49,7 @@ main() {
   register_runner
 }
 
+# shellcheck disable=SC2128
 if [ "$0" == "$BASH_SOURCE" ] ; then
   main
 fi
