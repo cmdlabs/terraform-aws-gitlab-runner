@@ -15,15 +15,21 @@ install_deps() {
   yum -y install docker jq
 }
 
+install_runner() {
+  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash
+  yum -y install gitlab-runner
+}
+
 edit_config_toml() {
   sed -i '
     s/^concurrent =/concurrent = '"${gitlab_runner_concurrency}"'/
   ' /etc/gitlab-runner/config.toml
 }
 
-install_runner() {
-  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash
-  yum -y install gitlab-runner
+start_runner() {
+  service docker start
+  service gitlab-runner start
+  chkconfig gitlab-runner on
 }
 
 register_runner() {
@@ -33,19 +39,14 @@ register_runner() {
     --docker-image "${gitlab_runner_docker_image}"
 }
 
-start_runner() {
-  service gitlab-runner restart
-  chkconfig gitlab-runner on
-}
-
 main() {
   update_hosts_file
   update_system
   install_deps
-  edit_config_toml
   install_runner
-  register_runner
+  edit_config_toml
   start_runner
+  register_runner
 }
 
 if [ "$0" == "$BASH_SOURCE" ] ; then
