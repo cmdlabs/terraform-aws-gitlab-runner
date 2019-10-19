@@ -12,7 +12,7 @@ update_system() {
 }
 
 install_deps() {
-  yum -y install aws-cli jq
+  yum -y install docker jq
 }
 
 edit_config_toml() {
