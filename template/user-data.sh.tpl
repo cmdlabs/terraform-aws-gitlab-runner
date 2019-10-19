@@ -45,7 +45,7 @@ main() {
   edit_config_toml
   install_runner
   register_runner
-  #start_runner
+  start_runner
 }
 
 if [ "$0" == "$BASH_SOURCE" ] ; then
