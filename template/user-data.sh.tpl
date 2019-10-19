@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 update_hosts_file() {
+  local host_name="$(hostname)"
   echo "\
-127.0.0.1   localhost localhost.localdomain $(hostname)" \
+127.0.0.1   localhost localhost.localdomain $host_name" \
   >> /etc/hosts
 }
 
@@ -20,7 +21,7 @@ edit_config_toml() {
   ' /etc/gitlab-runner/config.toml
 }
 
-install_gitlab_runner() {
+install_runner() {
   curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash
   yum -y install gitlab-runner
 }
@@ -32,7 +33,7 @@ register_runner() {
     --docker-image "${gitlab_runner_docker_image}"
 }
 
-start_gitlab_runner() {
+start_runner() {
   service gitlab-runner restart
   chkconfig gitlab-runner on
 }
@@ -42,9 +43,9 @@ main() {
   update_system
   install_deps
   edit_config_toml
-  install_gitlab_runner
+  install_runner
   register_runner
-  #start_gitlab_runner
+  #start_runner
 }
 
 if [ "$0" == "$BASH_SOURCE" ] ; then
