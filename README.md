@@ -8,6 +8,7 @@
 1. [Overview](#overview)
 2. [AWS GitLab Runner Terraform](#aws-gitlab-runner-terraform)
     * [Inputs](#inputs)
+    * [Registration config](#registration-config)
     * [Outputs](#outputs)
 3. [Example](#example)
     * [Obtain a Registration Token](#obtain-a-registration-token)
@@ -36,6 +37,15 @@ The below outlines the current parameters and defaults.
 |gitlab_runner_registration_config|Configuration used to register the runner|map(string)|(map)|No|
 |gitlab_runner_concurrency|Concurrent value for the runners|number|5|No|
 
+### Registration config
+
+In the gitlab_runner_registration_config variable pass the details needed to register the GitLab Runner. It accepts four keys:
+
+- `url` - the GitLab URL e.g. https://gitlab.com
+- `name` - the name of the GitLab Runner. This is informational only and forms the description
+- `registration_token` - the Registration Token. See below for instructions on generating this
+- `docker_image` - the Docker Image to be used by the Docker Executor e.g. alpine:latest
+
 ### Outputs
 
 None.
@@ -44,7 +54,7 @@ None.
 
 ### Obtain a Registration Token
 
-See the GitLab docs [here](https://docs.gitlab.com/ee/ci/runners/#registering-a-specific-runner-with-a-project-registration-token)
+See the GitLab docs [here](https://docs.gitlab.com/ee/ci/runners/#registering-a-specific-runner-with-a-project-registration-token).
 
 - Go to the project in GitLab e.g. https://gitlab.com/alexharv074/test
 - On the left hand side select Settings > CI/CD
