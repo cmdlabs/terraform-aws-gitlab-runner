@@ -223,7 +223,7 @@
                   }
                 ],
                 "spot_price": null,
-                "user_data": "ced0b9b9c47902c5e5517e9d53cc40816a8f44a1",
+                "user_data": "b869567adcdbefdfc3dbe9e5889ba89c03dc019c",
                 "user_data_base64": null,
                 "vpc_classic_link_id": null,
                 "vpc_classic_link_security_groups": null
@@ -640,7 +640,7 @@
             }
           ],
           "spot_price": null,
-          "user_data": "ced0b9b9c47902c5e5517e9d53cc40816a8f44a1",
+          "user_data": "b869567adcdbefdfc3dbe9e5889ba89c03dc019c",
           "user_data_base64": null,
           "vpc_classic_link_id": null,
           "vpc_classic_link_security_groups": null
@@ -940,16 +940,15 @@
                 "schema_version": 0,
                 "values": {
                   "filename": null,
-                  "id": "3b6f91bc1b59e0c7f9e198da808cb46e98e28ed11543f954b2ca8e4fed540b54",
-                  "rendered": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  :\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  registration_token=\"GBpeL612xfp3DtEjzZsx\"\n  # TODO.\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
-                  "template": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  :\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  registration_token=\"${gitlab_runner_registration_token}\"\n  # TODO.\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                  "id": "6116bd316a0994794f1ae976b29a484ef91d6552f1a83ec749b8b31c1d995400",
+                  "rendered": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  :\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  gitlab-runner register --non-interactive --executor 'docker' \\\n    --url \"https://gitlab.com\" --name \"test-runner\" \\\n    --registration-token \"GBpeL612xfp3DtEjzZsx\" \\\n    --docker-image \"alpine:latest\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                  "template": "#!/usr/bin/env bash\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli jq\n}\n\nedit_config_toml() {\n  :\n}\n\ninstall_gitlab_runner() {\n  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner\n}\n\nregister_runner() {\n  gitlab-runner register --non-interactive --executor 'docker' \\\n    --url \"${gitlab_runner_url}\" --name \"${gitlab_runner_name}\" \\\n    --registration-token \"${gitlab_runner_registration_token}\" \\\n    --docker-image \"${gitlab_runner_docker_image}\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  edit_config_toml\n  install_gitlab_runner\n  register_runner\n  #start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
                   "vars": {
                     "aws_region": "ap-southeast-2",
-                    "gitlab_runner_access_level": "not_protected",
-                    "gitlab_runner_description": "runner default - auto",
-                    "gitlab_runner_locked_to_project": "true",
-                    "gitlab_runner_maximum_timeout": "3600",
+                    "gitlab_runner_docker_image": "alpine:latest",
+                    "gitlab_runner_name": "test-runner",
                     "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
+                    "gitlab_runner_url": "https://gitlab.com",
                     "runners_ssm_token_key": "gitlab-runner-runner-token"
                   }
                 }
@@ -1498,7 +1497,6 @@
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
-                      "var.gitlab_runner_registration_config",
                       "local.runners_ssm_token_key"
                     ]
                   }
@@ -1516,11 +1514,10 @@
               },
               "gitlab_runner_registration_config": {
                 "default": {
-                  "access_level": "",
-                  "description": "",
-                  "locked_to_project": "",
-                  "maximum_timeout": "",
-                  "registration_token": ""
+                  "docker_image": "",
+                  "name": "",
+                  "registration_token": "",
+                  "url": ""
                 },
                 "description": "Configuration used to register the runner"
               },

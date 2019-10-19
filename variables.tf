@@ -36,11 +36,10 @@ variable "gitlab_runner_registration_config" {
   type        = map(string)
 
   default = {
+    url                = ""
+    name               = ""
     registration_token = ""
-    description        = ""
-    locked_to_project  = ""
-    maximum_timeout    = ""
-    access_level       = ""
+    docker_image       = ""
   }
 }
 

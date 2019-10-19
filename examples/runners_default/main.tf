@@ -20,12 +20,10 @@ module "runner" {
   subnet_ids   = var.subnet_ids
 
   gitlab_runner_registration_config = {
+    url                = "https://gitlab.com"
+    name               = "test-runner"
     registration_token = var.registration_token
-    description        = "runner default - auto"
-    locked_to_project  = "true"
-    run_untagged       = "false"
-    maximum_timeout    = "3600"
-    access_level       = "not_protected"
+    docker_image       = "alpine:latest"
   }
 
   enable_ssh_access = var.enable_ssh_access

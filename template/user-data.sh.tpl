@@ -24,8 +24,10 @@ install_gitlab_runner() {
 }
 
 register_runner() {
-  registration_token="${gitlab_runner_registration_token}"
-  # TODO.
+  gitlab-runner register --non-interactive --executor 'docker' \
+    --url "${gitlab_runner_url}" --name "${gitlab_runner_name}" \
+    --registration-token "${gitlab_runner_registration_token}" \
+    --docker-image "${gitlab_runner_docker_image}"
 }
 
 start_gitlab_runner() {

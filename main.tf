@@ -43,11 +43,10 @@ data "template_file" "user_data" {
 
   vars = {
     aws_region                       = var.aws_region
-    gitlab_runner_description        = var.gitlab_runner_registration_config["description"]
-    gitlab_runner_access_level       = var.gitlab_runner_registration_config["access_level"]
-    gitlab_runner_locked_to_project  = var.gitlab_runner_registration_config["locked_to_project"]
-    gitlab_runner_maximum_timeout    = var.gitlab_runner_registration_config["maximum_timeout"]
+    gitlab_runner_url                = var.gitlab_runner_registration_config["url"]
+    gitlab_runner_name               = var.gitlab_runner_registration_config["name"]
     gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
+    gitlab_runner_docker_image       = var.gitlab_runner_registration_config["docker_image"]
     runners_ssm_token_key            = local.runners_ssm_token_key
   }
 }
