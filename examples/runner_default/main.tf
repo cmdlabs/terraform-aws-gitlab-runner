@@ -14,8 +14,6 @@ module "runner" {
 
   key_name = "default"
 
-  aws_region = "ap-southeast-2"
-
   vpc_id       = var.vpc_id
   subnet_ids   = var.subnet_ids
 

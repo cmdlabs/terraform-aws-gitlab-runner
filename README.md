@@ -28,14 +28,13 @@ The below outlines the current parameters and defaults.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-------:|:--------:|
-|aws_region|Name of S3 region for the runner cache and SSM|string|""|Yes|
-|vpc_id|The target VPC for the docker-machine and runner instances|string|""|Yes|
-|subnet_ids|List of subnets used for hosting the GitLab runners|list(string)|""|Yes|
+|vpc_id|The target VPC for hosting the GitLab Runner|string|""|Yes|
+|subnet_ids|List of subnets for hosting the GitLab Runner|list(string)|""|Yes|
 |key_name|The name of the EC2 key pair to use|string|default|No|
-|enable_ssh_access|Enables SSH access to the GitLab Runner instance|bool|false|No|
-|ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to docker machine and the GitLab Runner|list(string)|[0.0.0.0/0]|No|
+|enable_ssh_access|Enables SSH access to the GitLab Runner|bool|false|No|
+|ssh_cidr_blocks|List of CIDR blocks to use if allowing SSH Access to the GitLab Runner|list(string)|[0.0.0.0/0]|No|
 |gitlab_runner_registration_config|Configuration used to register the runner|map(string)|(map)|No|
-|gitlab_runner_concurrency|Concurrent value for the runners|number|5|No|
+|gitlab_runner_concurrency|Maximum number of jobs to allow the GitLab Runner to run concurrently|number|5|No|
 
 ### Registration config
 

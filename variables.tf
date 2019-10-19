@@ -1,15 +1,10 @@
-variable "aws_region" {
-  description = "Name of S3 region for the runner cache and SSM"
-  type        = string
-}
-
 variable "vpc_id" {
-  description = "The target VPC for the docker-machine and runner instances"
+  description = "The target VPC for hosting the GitLab Runner"
   type        = string
 }
 
 variable "subnet_ids" {
-  description = "List of subnets used for hosting the GitLab runners"
+  description = "List of subnets for hosting the GitLab Runner"
   type        = list(string)
 }
 
@@ -20,13 +15,13 @@ variable "key_name" {
 }
 
 variable "enable_ssh_access" {
-  description = "Enables SSH access to the GitLab Runner instance"
+  description = "Enables SSH access to the GitLab Runner"
   type        = bool
   default     = false
 }
 
 variable "ssh_cidr_blocks" {
-  description = "List of CIDR blocks to allow SSH Access to docker machine and the GitLab Runner"
+  description = "List of CIDR blocks to use if allowing SSH Access to the GitLab Runner"
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
@@ -44,7 +39,7 @@ variable "gitlab_runner_registration_config" {
 }
 
 variable "gitlab_runner_concurrency" {
-  description = "Concurrent value for the runners"
+  description = "Maximum number of jobs to allow the GitLab Runner to run concurrently"
   type        = number
   default     = 5
 }

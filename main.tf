@@ -31,12 +31,11 @@ data "template_file" "user_data" {
   template = file("${path.module}/template/user-data.sh.tpl")
 
   vars = {
-    aws_region                       = var.aws_region
+    gitlab_runner_concurrency        = var.gitlab_runner_concurrency
     gitlab_runner_url                = var.gitlab_runner_registration_config["url"]
     gitlab_runner_name               = var.gitlab_runner_registration_config["name"]
     gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
     gitlab_runner_docker_image       = var.gitlab_runner_registration_config["docker_image"]
-    gitlab_runner_concurrency        = var.gitlab_runner_concurrency
   }
 }
 
