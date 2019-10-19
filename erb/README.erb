@@ -7,23 +7,9 @@
 
 ## Overview
 
-This module creates a simple GitLab CI Runner on a long-lived EC2 instance in an Auto Scaling Group.
+This module creates a simple GitLab CI Runner using a Docker executor on a long-lived AWS EC2 instance in an Auto Scaling Group.
 
-### GitLab runner token configuration
-
-The runner is registered on initial deployment.
-
-To register the runner automatically set the variable `gitlab_runner_registration_config["token"]`. This token value can be found in your GitLab project, group, or global settings. For a generic runner you can find the token in the admin section. Here is an example:
-
-``` hcl
-gitlab_runner_registration_config = {
-  registration_token = "<registration token>"
-  description        = "<some description>"
-  locked_to_project  = "true"
-  maximum_timeout    = "3600"
-  access_level       = "<not_protected OR ref_protected, ref_protected runner will only run on pipelines triggered on protected branches>"
-}
-```
+## AWS GitLab Runner Terraform
 
 ### Inputs
 
@@ -35,23 +21,53 @@ The below outlines the current parameters and defaults.
 
 ### Outputs
 
-|Name|Description|
-|------------|---------------------|
-<%= %x{ruby erb/outputs2md.rb outputs.tf} -%>
+None.
 
-### Examples
+## Example
 
-To create a Gitlab Runner:
+### Obtain a Registration Token
+
+See the GitLab docs [here](https://docs.gitlab.com/ee/ci/runners/#registering-a-specific-runner-with-a-project-registration-token)
+
+- Go to the project in GitLab e.g. https://gitlab.com/alexharv074/test
+- On the left hand side select Settings > CI/CD
+- Under Runners Expand.
+
+The registration token can be found from here.
+
+Put the token in a tfvars file or in an environment variable:
+
+```text
+▶ export TF_VAR_registration_token=XXXXXXXXX
+```
+
+### Add a .gitlab-ci.yml to a project
+
+Create a simple `.gitlab-ci.yml` file in the root of your project e.g.
+
+```yaml
+---
+image: busybox:latest
+
+build1:
+  stage: build
+  script:
+    - echo "hello world"
+```
+
+### Declare the module
+
+Here is an example usage:
 
 ```tf
 <% remote = %x{git remote -v}.split("\n")[0].split[1] -%>
 <%= %x{sed -E 's!source( +)=.*!source\\1= "#{remote}"!' examples/runner_default/main.tf} -%>
 ```
 
-To apply that:
+Apply that:
 
 ```text
-▶ TF_VAR_registration_token=xxxxxxxx terraform apply
+▶ terraform apply
 ```
 
 ## License

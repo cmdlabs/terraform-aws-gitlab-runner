@@ -42,8 +42,6 @@ build1:
 
 ## Run the job in GitLab
 
-A spot instance will be created to run the job.
-
 ## Tear down the CI Runner
 
 Tear down:
