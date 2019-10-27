@@ -70,7 +70,7 @@ Here is an example usage:
 
 ```tf
 <% remote = %x{git remote -v}.split("\n")[0].split[1] -%>
-<%= %x{sed -E 's!source( +)=.*!source\\1= "#{remote}"!' examples/runner_default/main.tf} -%>
+<%= %x{sed -E 's!source( +)=.*!source\\1= "#{remote}"!' examples/simple/main.tf} -%>
 ```
 
 Apply that:

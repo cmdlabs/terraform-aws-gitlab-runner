@@ -9,13 +9,14 @@ variable "subnet_ids" {
   type = list(string)
 }
 
+variable "key_name" {}
+
 module "runner" {
   source = "../../"
 
-  key_name = "default"
-
-  vpc_id       = var.vpc_id
-  subnet_ids   = var.subnet_ids
+  key_name   = var.key_name
+  vpc_id     = var.vpc_id
+  subnet_ids = var.subnet_ids
 
   gitlab_runner_concurrency = 10
 
